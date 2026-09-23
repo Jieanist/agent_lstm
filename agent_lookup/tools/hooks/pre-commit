@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# agent_lookup pre-commit（版本化；经 memory.sh install-hooks 装到 core.hooksPath）
+set -euo pipefail
+
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# 只关心 agent_lookup/ 的提交；纯代码提交直接放行（不跑记忆体检，不逼 --no-verify）
+echo "$STAGED" | grep -q '^agent_lookup/' || exit 0
+
+fail() { echo "pre-commit: $1" >&2; exit 1; }
+
+# a) 密钥轻量扫描（增量行）
+git diff --cached -U0 -- agent_lookup/ | grep -Ein \
+  '^\+.*(-----BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|(token|secret|password|api[_-]?key)[[:space:]]*[:=])' \
+  && fail "agent_lookup/ 疑似含凭据，请改写为「存放在哪/找谁」"
+
+# b) decisions/ incidents/ 正文只增不删（frontmatter 状态行可翻转，故只拦正文删除行）
+git diff --cached --numstat -- agent_lookup/decisions/ agent_lookup/incidents/ \
+  | awk -F'\t' '$2>0{print "  - " $3 "（删 " $2 " 行）"}' | grep -q . && fail "不可变文件检测到正文删除行（作废请改 status/superseded_by，不删正文）"
+
+# c) 命名规范
+for f in $STAGED; do
+  case "$f" in
+    agent_lookup/decisions/*|agent_lookup/incidents/*)
+      basename "$f" | grep -Eq '^[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\.md$' \
+        || fail "命名须 YYYY-MM-DD-<域>-<症状>.md：$f" ;;
+  esac
+done
+
+# d) 健康体检（已限定 agent_lookup，见顶部 early-return）
+agent_lookup/tools/memory.sh check || fail "memory check 未通过（见输出）"
+
+exit 0
