@@ -25,6 +25,7 @@ agent_lookup/tools/memory.sh check              # 体检（应输出「全绿」
 2. 跑 `memory.sh gen`（重建 CATALOG，R0 无条件执行）。
 3. 读常驻 6 件 + CATALOG「现行法律」视图（active 决策 + open/workaround incident）。
 4. Agent 报「上次到哪 / 今天建议 / 待审 N 条」，人在烧录等待窗批审 ≤2 分钟。
+5. 动手前复述任务 + 列默认假设（对齐纪律，见 `skills/intent-alignment/SKILL.md`）。
 
 ## 协议全文
 

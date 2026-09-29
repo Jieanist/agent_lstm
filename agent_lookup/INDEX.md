@@ -10,7 +10,9 @@ memory-schema: v2
 2. 跑 `tools/memory.sh gen`（重建 CATALOG）。
 3. 读 `project.md`（项目是干嘛的）→ `status.md`【现在】（上次到哪）→ `hardware.md` + `errata.md`（当前硬件戳与已知坑）。
 4. 读 `CATALOG.md`「现行法律」视图（active 决策 + open/workaround incident）。
-5. **向用户汇报四件事**：①上次做到哪 ②今天建议做啥 ③待审 N 条等你批 ④有无 >90 天未验证的过期旗标。
+5. **向用户汇报四件事**：①上次做到哪 ②今天建议做啥 ③待审 N 条等你批（批 = 改 `status` + `review:`）④有无 >90 天未验证的过期旗标。
+6. **动手前对齐**：复述今天任务 + 列默认假设；模糊处给 2-3 选项让人挑（全文见 `skills/intent-alignment/SKILL.md`）。
+7. **若人已批审**（有 `status` 翻转 + `review:` 指令）：读各文件 `review:` → 应用到派生文件（`status.md`【现在】/`short_term.md`/`errata.md`）→ `gen` 重建 → 提交一次 `memory(review): 批审 N 条`。
 
 ## 写入触发（写进哪、标什么；「怎么维护」的细节见 MAINTENANCE.md）
 
@@ -25,7 +27,7 @@ memory-schema: v2
 | 确认一个 errata / workaround | `errata.md`                           | —               |
 | 一条决策被推翻               | 新决策`superseded_by` 旧              | 旧→`superseded` |
 
-> 每写一条 draft 后：在 `status.md`【待审】加一行 → 立即 commit：`git commit -m "memory(decision|incident): 摘要" -- agent_lookup/`。
+> 每写一条 draft 后立即 commit：`git commit -m "memory(decision|incident): 摘要" -- agent_lookup/`；【待审】由 `gen` 自动重建，**勿手加行/手点勾**。
 
 ## 工作时的检索（R1~R6；R0 = 上面的开工流程）
 

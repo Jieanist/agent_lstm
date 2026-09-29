@@ -13,6 +13,7 @@ RESIDENT="INDEX.md project.md status.md short_term.md hardware.md errata.md"
 CAP=12288          # 12KB 硬上限
 WARN=8192          # 8KB 警戒线
 DOMAINS=" pcie dma irq clk power mem bus boot tool misc "
+SYMPTOMS=" timeout hang crash deadlock leak oob garbage misalign flaky regression bootfail perf compat panic silent ltssm-downgrade "
 
 # 提取文件 frontmatter 中某字段的值（不含键名）
 field() { # $1=key  $2=file
@@ -27,7 +28,7 @@ gen() {
     echo
     for f in decisions/*.md incidents/*.md; do
       [ -e "$f" ] || continue
-      st=$(field status "$f"); t=$(awk 'NR==1{sub(/^# /,"");print;exit}' "$f")
+      st=$(field status "$f"); t=$(awk '/^# /{sub(/^# /,"");print;exit}' "$f")
       case "$st" in
         active|open|workaround) printf -- "- [%s] %s — %s\n" "$st" "$f" "$t" ;;
       esac
@@ -41,7 +42,23 @@ gen() {
       printf -- "- %-56s [%s] [%s]\n" "$f" "${d:-?}" "${st:-?}"
     done
   } > CATALOG.md
-  echo "gen: CATALOG.md 已重建（$(ls decisions/*.md incidents/*.md 2>/dev/null | wc -l) 条）"
+
+  # status.md【待审】自动重建 = 所有 status:draft 的条目（人审只改 frontmatter，勿手点勾）
+  drafts=$(for f in decisions/*.md incidents/*.md; do
+    [ -e "$f" ] || continue
+    [ "$(field status "$f")" = draft ] || continue
+    case "$f" in decisions/*) echo "- draft decision: $(basename "$f")";;
+                  incidents/*) echo "- draft incident: $(basename "$f")";; esac
+  done)
+  sed -n '/^## 【待审】/q;p' status.md > .status.head
+  {
+    cat .status.head
+    echo "## 【待审】（gen 自动生成，勿手改；人审 = 改各文件 frontmatter status: draft→active/rejected/resolved）"
+    if [ -n "$drafts" ]; then printf '%s\n' "$drafts"; else echo "- （无待审）"; fi
+  } > status.md
+  rm -f .status.head
+
+  echo "gen: CATALOG.md 已重建（$(ls decisions/*.md incidents/*.md 2>/dev/null | wc -l) 条）；status.md【待审】已同步"
 }
 
 check() {
@@ -62,9 +79,16 @@ check() {
     else
       [ -n "$(field symptoms "$f")" ] || { echo "incident 缺 symptoms: $f"; err=1; }
       case "$st" in draft|open|workaround|resolved|rejected) ;; *) echo "非法 status '$st'（incident）: $f"; err=1 ;; esac
+      local sym; sym=$(field symptoms "$f" | tr -d '[]' | tr ',' ' ')
+      for s in $sym; do
+        echo "$SYMPTOMS" | grep -q " $s " || { echo "症状 '$s' 不在词表: $f"; err=1; }
+      done
     fi
     local d; d=$(field domain "$f")
     echo "$DOMAINS" | grep -q " $d " || { echo "域 '$d' 不在受控词表: $f"; err=1; }
+    if sed -n '/^---$/,/^---$/p' "$f" | grep -Ev '^(---|[a-z_]+: .*)$' | grep -q .; then
+      echo "frontmatter 存在非法行（须单行 key: value）: $f"; err=1
+    fi
   done
 
   # 2) 尺寸 cap

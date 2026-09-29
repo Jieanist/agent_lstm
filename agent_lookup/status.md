@@ -7,6 +7,6 @@
 - 今日建议：___
 - 已知一次性问题：<这周被 X 卡住，绕过 Y>
 
-## 【待审】（Agent 维护；人开工清空 keep/改/drop）
-- [ ] draft decision: 2026-09-23-irq-polling-vs-interrupt.md
-- [ ] draft incident: 2026-09-23-pcie-ltssm-timeout.md
+## 【待审】（gen 自动生成，勿手改；人审 = 改各文件 frontmatter status: draft→active/rejected/resolved）
+- draft decision: 2026-09-23-irq-polling-vs-interrupt.md
+- draft incident: 2026-09-23-pcie-ltssm-timeout.md

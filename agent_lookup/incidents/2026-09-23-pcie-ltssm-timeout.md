@@ -1,7 +1,7 @@
 ---
 date: 2026-09-23
 domain: pcie
-symptoms: [timeout, 超时, ltssm-downgrade]
+symptoms: [timeout, ltssm-downgrade]
 status: draft
 scope: A0-stepping / board#2 / fw-20240911
 related: []

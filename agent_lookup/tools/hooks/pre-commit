@@ -14,9 +14,13 @@ git diff --cached -U0 -- agent_lookup/ | grep -Ein \
   '^\+.*(-----BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|(token|secret|password|api[_-]?key)[[:space:]]*[:=])' \
   && fail "agent_lookup/ 疑似含凭据，请改写为「存放在哪/找谁」"
 
-# b) decisions/ incidents/ 正文只增不删（frontmatter 状态行可翻转，故只拦正文删除行）
-git diff --cached --numstat -- agent_lookup/decisions/ agent_lookup/incidents/ \
-  | awk -F'\t' '$2>0{print "  - " $3 "（删 " $2 " 行）"}' | grep -q . && fail "不可变文件检测到正文删除行（作废请改 status/superseded_by，不删正文）"
+# b) decisions/ incidents/ 正文只增不删；frontmatter 行（status/superseded_by 翻转等）允许改
+if git diff --cached -U0 -- agent_lookup/decisions/ agent_lookup/incidents/ \
+   | grep '^-' | grep -v '^--- ' \
+   | grep -Ev '^-(date|domain|symptoms|status|superseded_by|scope|overrule_if|related|review): ' \
+   | grep -Ev '^----$' | grep -q .; then
+  fail "不可变文件检测到正文删除行（作废请改 status/superseded_by，不删正文）"
+fi
 
 # c) 命名规范
 for f in $STAGED; do
