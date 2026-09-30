@@ -31,6 +31,12 @@ agent_lookup/tools/memory.sh check              # 体检（应输出「全绿」
 
 见 `agent_lookup/INDEX.md`（身份/开工流程/写入触发/命名/frontmatter/受控词表/检索 R0~R6/git 纪律/密级红线/降级模式）。
 
+## 通用编码约定（CODESTYLE.md + scripts/checkpatch.pl）
+
+- `CODESTYLE.md` = 通用编码规则（checkpatch 门 / 入参校验 / 注释 / 锁），跨项目通用，是各项目编码风格的**基底**。
+- `scripts/checkpatch.pl` = 内核 checkpatch 风格门脚本；合入门 = `scripts/checkpatch.pl --no-tree --strict` 零 error / warning。
+- **项目适配**：新项目复制这两个文件到自己的 agent_lookup 仓库，在 `CODESTYLE.md` 对应小节追加项目特有项（命名前缀 / 信任边界清单 / 常量表 / 状态机 / 示例），通用小节保持原文即可。
+
 ## 维护者参考（人读，不进 Agent 开工上下文）
 
 **升级触发（任一命中即评估，先于事故报警）**
