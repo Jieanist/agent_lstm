@@ -23,6 +23,7 @@ memory-schema: v2
 | 一个 bug**修复验证通过**     | `incidents/YYYY-MM-DD-<域>-<症状>.md` | `draft`          |
 | 每次开工                     | 重写`status.md`【现在】               | —               |
 | 会话内完成小步               | `short_term.md` 追加一行指针          | —               |
+| 中间工具性文件 / 输出临时结果 | `scratch/`（不入库，超阈值清理）       | —               |
 | 换板卡 / 固件 / stepping     | `hardware.md`                         | —               |
 | 确认一个 errata / workaround | `errata.md`                           | —               |
 | 一条决策被推翻               | 新决策`superseded_by` 旧              | 旧→`superseded` |
@@ -37,6 +38,7 @@ memory-schema: v2
 ## 工具
 
 - `tools/memory.sh gen`（开工必跑）｜`check`（体检）｜`install-hooks`（装版本化 hook）。
+- 临时文件：工具性中间产物 / 临时结果放 `scratch/`（不放外部工作区、不放 /tmp；超阈值按 `scratch/README.md` 清理）。
 
 ## 红线（细节在 MAINTENANCE.md）
 

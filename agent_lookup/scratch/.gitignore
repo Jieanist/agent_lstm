@@ -1,0 +1,4 @@
+# scratch/ 内容不入版本库：临时文件 / 工具中间产物 / 结果输出
+*
+!.gitignore
+!README.md
