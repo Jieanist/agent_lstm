@@ -41,6 +41,8 @@ memory-schema: v2
 ## 红线（细节在 MAINTENANCE.md）
 
 - 密钥 / 密码 / token / 内网路径 / IP 值**不写**，只写「存放在哪 / 找谁」。
+- 代码注释只写 why、一律英文；**禁止把用户强调 / 要求 / 验收标准 / 开发过程写进注释**。
+- 禁止 Agent 自发 push（`git push` 需人明确授权；Agent 只 commit，不自行 push）。
 - 写文件、命名、frontmatter、git 提交的具体规则，一律查 **`MAINTENANCE.md`**。
 
 ## 降级模式

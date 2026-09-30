@@ -52,6 +52,8 @@ related: []                                  # 双链，可空
 ## 五、git 纪律
 
 - 消息 `memory(<域>|<文件>): 摘要` 一次一事；**记忆提交**用 `-- agent_lookup/` pathspec（禁 add -A / add . / commit -a）；**根目录工件**（AGENTS.md / README.md / skills/）正常提交。
+- **commit 一律英文**：摘要 + 正文全英文（`memory(<域>|<文件>): <English summary>`），禁中文 / 中英混杂。
+- **禁止 Agent 自发 push**：`git push`（含 force-push）属**人授权动作**——只有人明确说「push / 推送 / 提交并推送」时才执行；Agent 默认只 commit，不自行 push。
 - **提交粒度两层**：①工作期间每落一条 draft 立即 `memory(decision|incident): 摘要`（一条一提交，可单条追溯/回滚）；②每轮批审应用完一次 `memory(review): 批审 N 条`（一轮一提交，作开工前快照）。别把一轮内多条 draft 压成一个提交。
 - 禁对 agent_lookup/ reset --hard / rebase / amend；密钥值绝不入记忆（只写「存在哪 / 找谁」）。
 - 回滚：`log --follow` → `show` 预览 → `restore --source` → 新提交固化（优先向前修正）。
