@@ -11,7 +11,7 @@ memory-schema: v2
 3. 读 `project.md`（项目是干嘛的）→ `status.md`【现在】（上次到哪）→ `hardware.md` + `errata.md`（当前硬件戳与已知坑）。
 4. 读 `CATALOG.md`「现行法律」视图（active 决策 + open/workaround incident）。
 5. **向用户汇报四件事**：①上次做到哪 ②今天建议做啥 ③待审 N 条等你批（批 = 改 `status` + `review:`）④有无 >90 天未验证的过期旗标。
-6. **动手前对齐**：复述今天任务 + 列默认假设；模糊处给 2-3 选项让人挑（全文见 `skills/intent-alignment/SKILL.md`）。
+6. **动手前必须复述任务 + 列默认假设**（未复述 = 不可动手，硬门槛）；模糊处给 2-3 选项让人挑（全文见 `skills/intent-alignment/SKILL.md`）。
 7. **若人已批审**（有 `status` 翻转 + `review:` 指令）：读各文件 `review:` → 应用到派生文件（`status.md`【现在】/`short_term.md`/`errata.md`）→ `gen` 重建 → 提交一次 `memory(review): 批审 N 条`。
 
 ## 写入触发（写进哪、标什么；「怎么维护」的细节见 MAINTENANCE.md）
