@@ -17,6 +17,7 @@ memory-schema: v2
 | `short_term.md`                        | Agent              | 会话内完成小步              | 只追加一行指针                 | 不复述正文；≤40 条；按「工作线被取代」裁剪                  | 复述正文、只增不剪                     |
 | `hardware.md`                          | Agent 起草+人审    | 换板卡/固件/stepping        | 整节替换 + 更新「验证于」      | 旧硬件戳标「已停用」别删（要追溯旧决策的适用域）；不写密钥值 | 硬件戳与实际不符                       |
 | `errata.md`                            | Agent 起草+人审    | 确认 errata/workaround/修复 | 加一行；B 版修复确认后删对应行 | 每条带「验证于」+「复检触发」                                | workaround 长期「待验证」              |
+| `features.md`                          | Agent 起草+人审    | feature 状态变化            | 整行更新状态列                 | 与代码现状对账（feature-state 现场为准），不漂移            | 状态与代码不一致                       |
 | `decisions/`                           | Agent 起草+人审    | 拍板时                      | 一文件一决策；正文只增不删     | ≤10 行；推翻=新决策`superseded_by` 旧（不删旧）             | active 互相矛盾、>10 行                |
 | `incidents/`                           | Agent 起草+人审    | bug 修复验证通过时          | 一文件一事故；正文只增不删     | 字段齐全                                                     | 缺字段、症状词不在词表                 |
 | `CATALOG.md`                           | 脚本（gen）        | 开工                        | 重建                           | 永不手改                                                     | 被人手改过                             |
@@ -62,7 +63,8 @@ related: []                                  # 双链，可空
 
 - **开工批审（一轮一次；人只判、AI 应用）**：
   - 人：读【待审】各条**全文**，keep/改/drop = 改 frontmatter `status`（draft→active/rejected/resolved）+ 评语写 `review:` 一条一句，然后对 AI 说「审完了」。
-  - AI：读 `status` + 各 `review:` → 把指令应用到派生文件（`status.md`【现在】/`short_term.md`/`errata.md`）→ `gen` 重建 → 一次 `memory(review): 批审 N 条` 提交。
+  - AI：读 `status` + 各 `review:` → 把指令应用到派生文件（`features.md`/`status.md`【现在】/`short_term.md`）→ `gen` 重建 → 一次 `memory(review): 批审 N 条` 提交。
+  - **待审未清零前，Agent 停手**：不起草新 decision/incident、不推进长时间任务——人忘了批就等，别在没审的基础上叠新东西。
   - **勿在正文末尾堆评语、勿手点 status.md 勾勾**（勾勾是 `gen` 生成的）。
 - **月度 30s**：`memory.sh check` + 扫上表「腐化迹象」列 + 对 `status` 与 `git log -1` 的时差。
 - **引用习惯**：引用任何慢变事实前，先 git log / 现场探测对照（记忆是缓存，repo 是真相）。

@@ -111,6 +111,10 @@ check() {
   local t; t=$(printf -- '---\nstatus: draft\n---\n' | sed -n '/^---$/,/^---$/p' | sed -n 's/^status: //p' | head -n1)
   [ "$t" = "draft" ] || { echo "自测失败: frontmatter 解析"; err=1; }
 
+  # 6) 待审积压提示（draft 未清零 = 停手信号，只提醒不判错）
+  local nd; nd=$(for f in decisions/*.md incidents/*.md; do [ -e "$f" ] || continue; [ "$(field status "$f")" = draft ] && echo x; done | wc -l)
+  [ "$nd" -gt 0 ] && echo "提示: 待审 $nd 条 draft 未批，批审前 Agent 不得推进长任务"
+
   [ "$err" -eq 0 ] && echo "check: 全绿（$n 条 decisions/incidents）" || { echo "check: 有 $err 处问题"; exit 1; }
 }
 

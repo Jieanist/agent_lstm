@@ -8,11 +8,14 @@ memory-schema: v2
 
 1. 读本文件。
 2. 跑 `tools/memory.sh gen`（重建 CATALOG）。
-3. 读 `project.md`（项目是干嘛的）→ `status.md`【现在】（上次到哪）→ `hardware.md` + `errata.md`（当前硬件戳与已知坑）。
+3. 读 `project.md`（项目是干嘛的）→ `status.md`【现在】（上次到哪）→ `hardware.md` + `errata.md`（当前硬件戳与已知坑）→ `features.md`（feature 目标 vs 现状对账）。
 4. 读 `CATALOG.md`「现行法律」视图（active 决策 + open/workaround incident）。
 5. **向用户汇报四件事**：①上次做到哪 ②今天建议做啥 ③待审 N 条等你批（批 = 改 `status` + `review:`）④有无 >90 天未验证的过期旗标。
+
+> **待审积压 = 停手门槛**：`status.md`【待审】有 draft（N>0）时，Agent 不得再起草新 decision/incident、不得推进长时间任务——停下等人类批审（改 `status` + 写 `review:`）后再继续。人忘了批就等，别在没审的基础上叠新东西；否则长时间任务会漂移出谁也维护不了的东西。
+
 6. **动手前必须复述任务 + 列默认假设**（未复述 = 不可动手，硬门槛）；模糊处给 2-3 选项让人挑（全文见 `skills/intent-alignment/SKILL.md`）。
-7. **若人已批审**（有 `status` 翻转 + `review:` 指令）：读各文件 `review:` → 应用到派生文件（`status.md`【现在】/`short_term.md`/`errata.md`）→ `gen` 重建 → 提交一次 `memory(review): 批审 N 条`。
+7. **若人已批审**（有 `status` 翻转 + `review:` 指令）：读各文件 `review:` → 应用到派生文件（`features.md`/`status.md`【现在】/`short_term.md`）→ `gen` 重建 → 提交一次 `memory(review): 批审 N 条`。
 
 ## 写入触发（写进哪、标什么；「怎么维护」的细节见 MAINTENANCE.md）
 
@@ -27,6 +30,7 @@ memory-schema: v2
 | 换板卡 / 固件 / stepping     | `hardware.md`                         | —               |
 | 确认一个 errata / workaround | `errata.md`                           | —               |
 | 一条决策被推翻               | 新决策`superseded_by` 旧              | 旧→`superseded` |
+| feature 状态变化             | `features.md`（同步对账 feature-state）| —               |
 
 > 每写一条 draft 后立即 commit：`git commit -m "memory(decision|incident): 摘要" -- agent_lookup/`；【待审】由 `gen` 自动重建，**勿手加行/手点勾**。
 
